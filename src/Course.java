@@ -71,8 +71,10 @@ public class Course {
         return false;
     }
 
-
-
-
-
+    public void displayClassRoster(){
+        System.out.println("Instructor Name: " + instructor.getName());
+        System.out.println("Number of students in course: " + enrolledStudents.size());
+        for (Student student: enrolledStudents)
+            System.out.println(student);
+    }
 }
