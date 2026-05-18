@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 public class Course {
     //Data Fields
@@ -75,6 +77,13 @@ public class Course {
         System.out.println("Instructor Name: " + instructor.getName());
         System.out.println("Number of students in course: " + enrolledStudents.size());
         for (Student student: enrolledStudents)
+            System.out.println(student);
+    }
+
+    public void displayGpaLeaderboard(){
+        ArrayList<Student> sortedList = new ArrayList<>(enrolledStudents);
+        Collections.sort(sortedList);
+        for (Student student: sortedList)
             System.out.println(student);
     }
 }
