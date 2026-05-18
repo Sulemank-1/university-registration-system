@@ -3,8 +3,10 @@ public class Student extends Person implements Comparable<Student>{
     private double gpa;
 
     //Constructor
-    public Student(int studentID, String name, double gpa){
+    public Student(int studentID, String name, double gpa) throws InvalidGPAException{
         super(studentID, name);
+        if (!validGPA(gpa))
+            throw new InvalidGPAException("GPA must be between 0.0 and 4.0");
         this.gpa = gpa;
     }
 
@@ -32,5 +34,9 @@ public class Student extends Person implements Comparable<Student>{
     @Override
     public int compareTo(Student o){
         return Double.compare(o.getGpa(), getGpa());
+    }
+
+    public boolean validGPA(double gpa){
+        return (gpa >= 0.0 && gpa <= 4.0);
     }
 }
