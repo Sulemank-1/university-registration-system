@@ -53,7 +53,7 @@ public class Course {
             return false;
         }
         for (Student student: enrolledStudents)
-            if (student.getStudentID() == s.getStudentID()){
+            if (student.getId() == s.getId()){
                 System.out.println("Student ID already present");
                 return false;
             }
@@ -63,7 +63,7 @@ public class Course {
 
     public boolean dropStudent(int studentID){
         for (Student student: enrolledStudents)
-            if (student.getStudentID() == studentID) {
+            if (student.getId() == studentID) {
                 enrolledStudents.remove(student);
                 return true;
             }
