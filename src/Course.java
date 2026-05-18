@@ -47,6 +47,20 @@ public class Course {
     }
 
     //Methods
+    public boolean registerStudent(Student s){
+        if (enrolledStudents.size() >= MAX_SEATS){
+            System.out.println("Course seats full");
+            return false;
+        }
+        for (Student student: enrolledStudents)
+            if (student.getStudentID() == s.getStudentID()){
+                System.out.println("Student ID already present");
+                return false;
+            }
+        enrolledStudents.add(s);
+        return true;
+    }
+
 
 
 
