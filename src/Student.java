@@ -1,4 +1,4 @@
-public class Student extends Person{
+public class Student extends Person implements Comparable<Student>{
     //Data Fields
     private double gpa;
 
@@ -27,5 +27,10 @@ public class Student extends Person{
     @Override
     public String getRole(){
         return "Student";
+    }
+
+    @Override
+    public int compareTo(Student o){
+        return Double.compare(o.getGpa(), getGpa());
     }
 }
