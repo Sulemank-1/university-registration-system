@@ -61,6 +61,16 @@ public class Course {
         return true;
     }
 
+    public boolean dropStudent(int studentID){
+        for (Student student: enrolledStudents)
+            if (student.getStudentID() == studentID) {
+                enrolledStudents.remove(student);
+                return true;
+            }
+        System.out.println("Student ID not found");
+        return false;
+    }
+
 
 
 
