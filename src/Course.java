@@ -1,8 +1,9 @@
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
+import java.util.Scanner;
 
 public class Course {
     //Data Fields
@@ -91,13 +92,48 @@ public class Course {
 
     public void saveRoster(String filename) {
         try (PrintWriter output = new PrintWriter(filename)) {
+            output.println(getCourseCode() + "," + getTitle());
             for (Student s : enrolledStudents) {
-                output.println(getTitle() + ": ");
                 output.println(s.getId() + "," + s.getName() + "," + s.getGpa());
             }
             System.out.println("Roster successfully saved to " + filename);
         } catch (IOException e) {
             System.out.println("File Error: Could not write data to file. " + e.getMessage());
+        }
+    }
+
+    public void loadRoster(String filename) {
+        File file = new File(filename);
+        if (!file.exists()) {
+            System.out.println("No existing roster record found.");
+            return;
+        }
+
+        try (Scanner input = new Scanner(file)) {
+            if (input.hasNextLine()) {
+                String headerLine = input.nextLine();
+                String[] headerTokens = headerLine.split(",");
+                setCourseCode(headerTokens[0]);
+                setTitle(headerTokens[1]);
+            }
+
+            while (input.hasNextLine()) {
+                String line = input.nextLine();
+                String[] tokens = line.split(",");
+
+                int id = Integer.parseInt(tokens[0]);
+                String name = tokens[1];
+                double gpa = Double.parseDouble(tokens[2]);
+
+                try {
+                    registerStudent(new Student(id, name, gpa));
+                } catch (InvalidGPAException e) {
+                    System.out.println("Skipping Line: Found invalid GPA -> " + e.getMessage());
+                }
+            }
+            System.out.println("Course records successfully loaded from " + filename);
+        } catch (Exception e) {
+            System.out.println("System Error: Failed to parse roster file entries. " + e.getMessage());
         }
     }
 
