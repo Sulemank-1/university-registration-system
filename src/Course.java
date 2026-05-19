@@ -1,3 +1,5 @@
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -86,4 +88,17 @@ public class Course {
         for (Student student: sortedList)
             System.out.println(student);
     }
+
+    public void saveRoster(String filename) {
+        try (PrintWriter output = new PrintWriter(filename)) {
+            for (Student s : enrolledStudents) {
+                output.println(getTitle() + ": ");
+                output.println(s.getId() + "," + s.getName() + "," + s.getGpa());
+            }
+            System.out.println("Roster successfully saved to " + filename);
+        } catch (IOException e) {
+            System.out.println("File Error: Could not write data to file. " + e.getMessage());
+        }
+    }
+
 }
