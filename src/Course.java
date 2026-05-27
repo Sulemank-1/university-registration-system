@@ -1,11 +1,7 @@
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Scanner;
+import java.io.*;
+import java.util.*;
 
-public class Course {
+public class Course implements Serializable {
     //Data Fields
     private String courseCode;
     private String title;
