@@ -1,33 +1,35 @@
-import java.util.InputMismatchException;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
-        final String ROSTER_FILE = "roster.csv";
+        final String ROSTER_FILE = "roster.dat";
+        ArrayList<Course> courses = new ArrayList<>();
 
-        Faculty instructor = new Faculty(7001, "Dr. John Doe", "Computer Science");
+        if (courses.isEmpty()) {
+            System.out.println("System Log: No database found. Generating default course schema...");
+            Faculty instructor = new Faculty(7001, "Dr. John Doe", "Computer Science");
+            Course defaultCourse = new Course("OOP-121", "Object Oriented Programming", instructor);
+            courses.add(defaultCourse);
+        }
 
-        Course activeCourse = new Course("TEMP-000", "Default Course Title", instructor);
-
-        activeCourse.loadRoster(ROSTER_FILE);
+        Course activeCourse = courses.get(0);
 
         boolean running = true;
         while (running) {
-            System.out.println("\n=== " + activeCourse.getCourseCode() + ": " + activeCourse.getTitle() + " ===");
             System.out.println("1. Register a New Student");
-            System.out.println("2. View Standard Roster (Enrollment Order)");
+            System.out.println("2. View Roster");
             System.out.println("3. View Academic Leaderboard (Highest GPA First)");
             System.out.println("4. Drop Student by ID");
             System.out.println("5. Save Records and Exit System");
             System.out.print("Select menu option: ");
 
-            int choice = 0;
+            int choice;
             try {
-                choice = input.nextInt();
-            } catch (InputMismatchException e) {
+                String choiceInput = input.nextLine();
+                choice = Integer.parseInt(choiceInput.trim());
+            } catch (NumberFormatException e) {
                 System.out.println("Please input a valid option number.");
-                input.nextLine();
                 continue;
             }
 
@@ -35,11 +37,15 @@ public class Main {
                 case 1:
                     try {
                         System.out.print("Enter Student ID: ");
-                        int id = input.nextInt();
+                        String idInput = input.nextLine();
+                        int id = Integer.parseInt(idInput.trim());
+
                         System.out.print("Enter Student Name: ");
-                        String name = input.next();
-                        System.out.print("Enter Baseline GPA: ");
-                        double gpa = input.nextDouble();
+                        String name = input.nextLine();
+
+                        System.out.print("Enter GPA: ");
+                        String gpaInput = input.nextLine();
+                        double gpa = Double.parseDouble(gpaInput.trim());
 
                         Student newStudent = new Student(id, name, gpa);
 
@@ -72,7 +78,7 @@ public class Main {
                     break;
 
                 case 5:
-                    activeCourse.saveRoster(ROSTER_FILE);
+                    Course.saveRoster(ROSTER_FILE, courses);
                     running = false;
                     break;
 
