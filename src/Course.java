@@ -86,51 +86,37 @@ public class Course implements Serializable {
             System.out.println(student);
     }
 
-    public void saveRoster(String filename) {
-        try (PrintWriter output = new PrintWriter(filename)) {
-            output.println(getCourseCode() + "," + getTitle());
-            for (Student s : enrolledStudents) {
-                output.println(s.getId() + "," + s.getName() + "," + s.getGpa());
-            }
-            System.out.println("Roster successfully saved to " + filename);
+    public static void saveRoster(String filename, ArrayList<Course> activeCourses) {
+        try (
+                ObjectOutputStream output = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(filename)))
+        ) {
+            output.writeObject(activeCourses);
         } catch (IOException e) {
-            System.out.println("File Error: Could not write data to file. " + e.getMessage());
+            System.out.println("Could not write data to file.  " + e.getMessage());
         }
     }
 
-    public void loadRoster(String filename) {
+    public static ArrayList<Course> loadRoster(String filename) {
         File file = new File(filename);
         if (!file.exists()) {
             System.out.println("No existing roster record found.");
-            return;
+            return new ArrayList<>();
         }
 
-        try (Scanner input = new Scanner(file)) {
-            if (input.hasNextLine()) {
-                String headerLine = input.nextLine();
-                String[] headerTokens = headerLine.split(",");
-                setCourseCode(headerTokens[0]);
-                setTitle(headerTokens[1]);
-            }
-
-            while (input.hasNextLine()) {
-                String line = input.nextLine();
-                String[] tokens = line.split(",");
-
-                int id = Integer.parseInt(tokens[0]);
-                String name = tokens[1];
-                double gpa = Double.parseDouble(tokens[2]);
-
-                try {
-                    registerStudent(new Student(id, name, gpa));
-                } catch (InvalidGPAException e) {
-                    System.out.println("Skipping Line: Found invalid GPA -> " + e.getMessage());
-                }
-            }
+        try (
+                ObjectInputStream input = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)))
+        ) {
+            ArrayList<Course> classesRoster = (ArrayList<Course>) (input.readObject());
             System.out.println("Course records successfully loaded from " + filename);
-        } catch (Exception e) {
-            System.out.println("System Error: Failed to parse roster file entries. " + e.getMessage());
+            return classesRoster;
+        }catch (ClassNotFoundException ex) {
+            System.out.println("Class definition missing during object reconstruction.");
+        } catch (StreamCorruptedException ex) {
+            System.out.println("The binary file has been modified externally! Load aborted.");
+        } catch (IOException e) {
+        System.out.println("Failed to process serialization stream. " + e.getMessage());
         }
+        return new ArrayList<>();
     }
 
 }
